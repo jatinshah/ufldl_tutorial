@@ -52,4 +52,3 @@ def sample_images():
 
     return normalize_data(patches)
 
-
