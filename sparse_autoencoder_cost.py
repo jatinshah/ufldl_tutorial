@@ -1,5 +1,4 @@
 import numpy as np
-import math
 
 
 def sigmoid(x):
@@ -7,11 +6,11 @@ def sigmoid(x):
 
 
 def sigmoid_prime(x):
-    return sigmoid(x) * (1-sigmoid(x))
+    return sigmoid(x) * (1 - sigmoid(x))
 
 
 def KL_divergence(x, y):
-    return x * np.log(x/y) + (1-x) * np.log((1-x)/(1-y))
+    return x * np.log(x / y) + (1 - x) * np.log((1 - x) / (1 - y))
 
 
 # visible_size: the number of input units (probably 64)
@@ -28,23 +27,22 @@ def KL_divergence(x, y):
 # Returns: (cost,gradient) tuple
 def sparse_autoencoder_cost(theta, visible_size, hidden_size,
                             lambda_, sparsity_param, beta, data):
-
     # The input theta is a vector (because minFunc expects the parameters to be a vector).
     # We first convert theta to the (W1, W2, b1, b2) matrix/vector format, so that this
     # follows the notation convention of the lecture notes.
 
-    W1 = theta[0:hidden_size*visible_size].reshape(hidden_size, visible_size)
-    W2 = theta[hidden_size*visible_size:2*hidden_size*visible_size].reshape(visible_size, hidden_size)
-    b1 = theta[2*hidden_size*visible_size:2*hidden_size*visible_size+hidden_size]
-    b2 = theta[2*hidden_size*visible_size+hidden_size:]
+    W1 = theta[0:hidden_size * visible_size].reshape(hidden_size, visible_size)
+    W2 = theta[hidden_size * visible_size:2 * hidden_size * visible_size].reshape(visible_size, hidden_size)
+    b1 = theta[2 * hidden_size * visible_size:2 * hidden_size * visible_size + hidden_size]
+    b2 = theta[2 * hidden_size * visible_size + hidden_size:]
 
     # Number of training examples
     m = data.shape[1]
 
     # Forward propagation
-    z2 = W1.dot(data) + np.tile(b1, (m,1)).transpose()
+    z2 = W1.dot(data) + np.tile(b1, (m, 1)).transpose()
     a2 = sigmoid(z2)
-    z3 = W2.dot(a2) + np.tile(b2, (m,1)).transpose()
+    z3 = W2.dot(a2) + np.tile(b2, (m, 1)).transpose()
     h = sigmoid(z3)
 
     # Sparsity
@@ -60,7 +58,7 @@ def sparse_autoencoder_cost(theta, visible_size, hidden_size,
 
 
     # Backprop
-    sparsity_delta = np.tile(- rho / rho_hat + (1 - rho) / (1 - rho_hat), (m,1)).transpose()
+    sparsity_delta = np.tile(- rho / rho_hat + (1 - rho) / (1 - rho_hat), (m, 1)).transpose()
 
     delta3 = -(data - h) * sigmoid_prime(z3)
     delta2 = (W2.transpose().dot(delta3) + beta * sparsity_delta) * sigmoid_prime(z2)
@@ -72,8 +70,8 @@ def sparse_autoencoder_cost(theta, visible_size, hidden_size,
     # After computing the cost and gradient, we will convert the gradients back
     # to a vector format (suitable for minFunc).  Specifically, we will unroll
     # your gradient matrices into a vector.
-    grad = np.concatenate((W1grad.reshape(hidden_size* visible_size),
-                           W2grad.reshape(hidden_size*visible_size),
+    grad = np.concatenate((W1grad.reshape(hidden_size * visible_size),
+                           W2grad.reshape(hidden_size * visible_size),
                            b1grad.reshape(hidden_size),
                            b2grad.reshape(visible_size)))
 
