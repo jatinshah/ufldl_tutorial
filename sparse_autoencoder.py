@@ -62,10 +62,10 @@ def sparse_autoencoder_cost(theta, visible_size, hidden_size,
 
     delta3 = -(data - h) * sigmoid_prime(z3)
     delta2 = (W2.transpose().dot(delta3) + beta * sparsity_delta) * sigmoid_prime(z2)
-    W1grad = delta2.dot(data.transpose())
-    W2grad = delta3.dot(a2.transpose())
-    b1grad = np.sum(delta2, axis=1)
-    b2grad = np.sum(delta3, axis=1)
+    W1grad = delta2.dot(data.transpose()) / m + lambda_ * W1
+    W2grad = delta3.dot(a2.transpose()) / m + lambda_ * W2
+    b1grad = np.sum(delta2, axis=1) / m
+    b2grad = np.sum(delta3, axis=1) / m
 
     # After computing the cost and gradient, we will convert the gradients back
     # to a vector format (suitable for minFunc).  Specifically, we will unroll
