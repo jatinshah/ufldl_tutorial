@@ -46,14 +46,14 @@ def sparse_autoencoder_cost(theta, visible_size, hidden_size,
     h = sigmoid(z3)
 
     # Sparsity
-    rho_hat = np.sum(a2, axis=1)
+    rho_hat = np.sum(a2, axis=1) / m
     rho = np.tile(sparsity_param, hidden_size)
 
 
     # Cost function
     cost = np.sum((h - data) ** 2) / (2 * m) + \
            (lambda_ / 2) * (np.sum(W1 ** 2) + np.sum(W2 ** 2)) + \
-           (beta / m) * np.sum(KL_divergence(rho_hat, rho))
+           beta * np.sum(KL_divergence(rho, rho_hat))
 
 
 

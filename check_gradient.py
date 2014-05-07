@@ -33,11 +33,11 @@ def check_gradient():
     num_grad = compute_gradient.compute_gradient(simple_quadratic_function, x)
     print num_grad, grad
     print "The above two columns you get should be very similar.\n" \
-          "(Left-Your Numerical Gradient, Right-Analytical Gradient)\n\n"
+          "(Left-Your Numerical Gradient, Right-Analytical Gradient)\n"
 
     diff = np.linalg.norm(num_grad - grad) / np.linalg.norm(num_grad + grad)
     print diff
-    print "Norm of the difference between numerical and analytical num_grad (should be < 1e-9)\n\n"
+    print "Norm of the difference between numerical and analytical num_grad (should be < 1e-9)\n"
 
 
 check_gradient()

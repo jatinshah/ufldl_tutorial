@@ -15,6 +15,8 @@ def compute_gradient(J, theta):
         theta_epsilon_minus[i] = theta[i] - epsilon
 
         gradient[i] = (J(theta_epsilon_plus)[0] - J(theta_epsilon_minus)[0]) / (2 * epsilon)
+        if (i % 100 == 0):
+            print "Computing gradient for input:", i
 
     return gradient
 
