@@ -12,7 +12,7 @@ import matplotlib
 # opt_graycolor: whether we use gray as the heat map. Default is true.
 # opt_colmajor: you can switch convention to row major for A. In that
 # case, each row of A is a filter. Default value is false.
-def display_network(A):
+def display_network(A, filename='weights.png'):
     opt_normalize = True
     opt_graycolor = True
 
@@ -47,7 +47,7 @@ def display_network(A):
                     A[:, k].reshape(sz, sz) / np.max(np.abs(A))
             k = k + 1
 
-    plt.imsave('weights.png', image, cmap=matplotlib.cm.gray)
+    plt.imsave(filename, image, cmap=matplotlib.cm.gray)
 
 
 
