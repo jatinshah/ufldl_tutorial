@@ -5,7 +5,9 @@ import sample_images
 import initialize_params
 import sparse_autoencoder
 import check_gradient
+import compute_gradient
 import display_network
+import load_MNIST_images
 
 
 ##======================================================================
@@ -14,16 +16,16 @@ import display_network
 #  change the parameters below.
 
 # number of input units
-visible_size = 8 * 8
+visible_size = 28 * 28
 # number of input units
-hidden_size = 25
+hidden_size = 196
 
 # desired average activation of the hidden units.
 # (This was denoted by the Greek alphabet rho, which looks like a lower-case "p",
 #  in the lecture notes).
-sparsity_param = 0.01
+sparsity_param = 0.1
 # weight decay parameter
-lambda_ = 0.0001
+lambda_ = 3e-3
 # weight of sparsity penalty term
 beta = 3
 
@@ -33,7 +35,12 @@ beta = 3
 #  After implementing sampleIMAGES, the display_network command should
 #  display a random sample of 200 patches from the dataset
 
-patches = sample_images.sample_images()
+# Loading Sample Images
+# patches = sample_images.sample_images()
+
+# Loading 10K images from MNIST database
+images = load_MNIST_images.load_MNIST_images('data/mnist/train-images-idx3-ubyte')
+patches = images[:, 0:10000]
 
 #  Obtain random parameters theta
 theta = initialize_params.initialize(hidden_size, visible_size)
@@ -80,25 +87,27 @@ print cost, grad
 # simple function.  After you have implemented computeNumericalGradient.m,
 # run the following:
 
-check_gradient.check_gradient()
+gradient_check = False
 
-# Now we can use it to check your cost function and derivative calculations
-# for the sparse autoencoder.
-# J is the cost function
+if (gradient_check):
+    check_gradient.check_gradient()
 
-J = lambda x: sparse_autoencoder.sparse_autoencoder_cost(x, visible_size, hidden_size,
-                                                         lambda_, sparsity_param,
+    # Now we can use it to check your cost function and derivative calculations
+    # for the sparse autoencoder.
+    # J is the cost function
+
+    J = lambda x: sparse_autoencoder.sparse_autoencoder_cost(x, visible_size, hidden_size,
+                                                             lambda_, sparsity_param,
                                                          beta, patches)
-# num_grad = compute_gradient.compute_gradient(J, theta)
-num_grad = 0
+    num_grad = compute_gradient.compute_gradient(J, theta)
 
-# Use this to visually compare the gradients side by side
-print num_grad, grad
+    # Use this to visually compare the gradients side by side
+    print num_grad, grad
 
-# Compare numerically computed gradients with the ones obtained from backpropagation
-diff = np.linalg.norm(num_grad - grad) / np.linalg.norm(num_grad + grad)
-print diff
-print "Norm of the difference between numerical and analytical num_grad (should be < 1e-9)\n\n"
+    # Compare numerically computed gradients with the ones obtained from backpropagation
+    diff = np.linalg.norm(num_grad - grad) / np.linalg.norm(num_grad + grad)
+    print diff
+    print "Norm of the difference between numerical and analytical num_grad (should be < 1e-9)\n\n"
 
 ##======================================================================
 ## STEP 4: After verifying that your implementation of
@@ -111,7 +120,7 @@ theta = initialize_params.initialize(hidden_size, visible_size)
 J = lambda x: sparse_autoencoder.sparse_autoencoder_cost(x, visible_size, hidden_size,
                                                          lambda_, sparsity_param,
                                                          beta, patches)
-options_ = {'maxiter': 1000, 'disp': True}
+options_ = {'maxiter': 400, 'disp': True}
 result = scipy.optimize.minimize(J, theta, method='L-BFGS-B', jac=True, options=options_)
 opt_theta = result.x
 

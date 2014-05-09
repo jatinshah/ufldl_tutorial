@@ -31,7 +31,7 @@ def display_network(A):
     if not opt_graycolor:
         image = 0.1 * image
 
-    k = 1
+    k = 0
     for i in range(int(m)):
         for j in range(int(n)):
             if k >= col:

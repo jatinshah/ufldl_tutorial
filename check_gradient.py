@@ -39,6 +39,3 @@ def check_gradient():
     print diff
     print "Norm of the difference between numerical and analytical num_grad (should be < 1e-9)\n"
 
-
-check_gradient()
-
