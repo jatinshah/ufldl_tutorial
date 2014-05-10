@@ -18,6 +18,3 @@ def load_MNIST_labels(filename):
         f.close()
 
         return labels
-
-
-load_MNIST_labels('data/mnist/train-labels-idx1-ubyte')

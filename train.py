@@ -87,9 +87,9 @@ print cost, grad
 # simple function.  After you have implemented computeNumericalGradient.m,
 # run the following:
 
-gradient_check = False
+debug = False
 
-if (gradient_check):
+if (debug):
     check_gradient.check_gradient()
 
     # Now we can use it to check your cost function and derivative calculations
@@ -98,7 +98,7 @@ if (gradient_check):
 
     J = lambda x: sparse_autoencoder.sparse_autoencoder_cost(x, visible_size, hidden_size,
                                                              lambda_, sparsity_param,
-                                                         beta, patches)
+                                                             beta, patches)
     num_grad = compute_gradient.compute_gradient(J, theta)
 
     # Use this to visually compare the gradients side by side
