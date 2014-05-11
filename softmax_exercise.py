@@ -93,5 +93,7 @@ opt_theta, input_size, num_classes = softmax.softmax_train(input_size, num_class
 #  (in softmaxPredict.m), which should return predictions
 #  given a softmax model and the input data.
 
-predictions = softmax.softmax_predict((opt_theta, input_size, num_classes), input_data)
-print "Accuracy: {0:.2f}%".format(100 * np.sum(predictions == labels, dtype=np.float64) / labels.shape[0])
+test_images = load_MNIST_images.load_MNIST_images('data/mnist/t10k-images.idx3-ubyte')
+test_labels = load_MNIST_labels.load_MNIST_labels('data/mnist/t10k-labels.idx1-ubyte')
+predictions = softmax.softmax_predict((opt_theta, input_size, num_classes), test_images)
+print "Accuracy: {0:.2f}%".format(100 * np.sum(predictions == test_labels, dtype=np.float64) / test_labels.shape[0])

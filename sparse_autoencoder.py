@@ -13,6 +13,23 @@ def KL_divergence(x, y):
     return x * np.log(x / y) + (1 - x) * np.log((1 - x) / (1 - y))
 
 
+def initialize(hidden_size, visible_size):
+    # we'll choose weights uniformly from the interval [-r, r]
+    r = np.sqrt(6) / np.sqrt(hidden_size + visible_size + 1)
+    W1 = np.random.random((hidden_size, visible_size)) * 2 * r - r
+    W2 = np.random.random((visible_size, hidden_size)) * 2 * r - r
+
+    b1 = np.zeros(hidden_size, dtype=np.float64)
+    b2 = np.zeros(visible_size, dtype=np.float64)
+
+    theta = np.concatenate((W1.reshape(hidden_size * visible_size),
+                            W2.reshape(hidden_size * visible_size),
+                            b1.reshape(hidden_size),
+                            b2.reshape(visible_size)))
+
+    return theta
+
+
 # visible_size: the number of input units (probably 64)
 # hidden_size: the number of hidden units (probably 25)
 # lambda_: weight decay parameter
@@ -76,3 +93,26 @@ def sparse_autoencoder_cost(theta, visible_size, hidden_size,
                            b2grad.reshape(visible_size)))
 
     return (cost, grad)
+
+
+def sparse_autoencoder(theta, hidden_size, visible_size, data):
+    """
+    :param theta: trained weights from the autoencoder
+    :param hidden_size: the number of hidden units (probably 25)
+    :param visible_size: the number of input units (probably 64)
+    :param data: Our matrix containing the training data as columns.  So, data(:,i) is the i-th training example.
+    """
+
+    # We first convert theta to the (W1, W2, b1, b2) matrix/vector format, so that this
+    # follows the notation convention of the lecture notes.
+    W1 = theta[0:hidden_size * visible_size].reshape(hidden_size, visible_size)
+    b1 = theta[2 * hidden_size * visible_size:2 * hidden_size * visible_size + hidden_size]
+
+    # Number of training examples
+    m = data.shape[1]
+
+    # Forward propagation
+    z2 = W1.dot(data) + np.tile(b1, (m, 1)).transpose()
+    a2 = sigmoid(z2)
+
+    return a2

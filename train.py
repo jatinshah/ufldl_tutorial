@@ -2,7 +2,6 @@ import numpy as np
 import scipy.optimize
 
 import sample_images
-import initialize_params
 import sparse_autoencoder
 import check_gradient
 import compute_gradient
@@ -28,6 +27,9 @@ sparsity_param = 0.1
 lambda_ = 3e-3
 # weight of sparsity penalty term
 beta = 3
+# debug
+debug = False
+
 
 ##======================================================================
 ## STEP 1: Implement sampleIMAGES
@@ -43,7 +45,7 @@ images = load_MNIST_images.load_MNIST_images('data/mnist/train-images-idx3-ubyte
 patches = images[:, 0:10000]
 
 #  Obtain random parameters theta
-theta = initialize_params.initialize(hidden_size, visible_size)
+theta = sparse_autoencoder.initialize(hidden_size, visible_size)
 
 ##======================================================================
 ## STEP 2: Implement sparseAutoencoderCost
@@ -87,7 +89,6 @@ print cost, grad
 # simple function.  After you have implemented computeNumericalGradient.m,
 # run the following:
 
-debug = False
 
 if (debug):
     check_gradient.check_gradient()
@@ -115,7 +116,7 @@ if (debug):
 #  autoencoder with minFunc (L-BFGS).
 
 #  Randomly initialize the parameters
-theta = initialize_params.initialize(hidden_size, visible_size)
+theta = sparse_autoencoder.initialize(hidden_size, visible_size)
 
 J = lambda x: sparse_autoencoder.sparse_autoencoder_cost(x, visible_size, hidden_size,
                                                          lambda_, sparsity_param,
