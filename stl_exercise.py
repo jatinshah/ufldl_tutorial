@@ -1,5 +1,4 @@
-import load_MNIST_labels
-import load_MNIST_images
+import load_MNIST
 import numpy as np
 import sparse_autoencoder
 import scipy.optimize
@@ -26,8 +25,8 @@ beta = 3  # weight of sparsity penalty term
 #  We have sorted the data for you in this so that you will not have to
 #  change it.
 
-images = load_MNIST_images.load_MNIST_images('data/mnist/train-images-idx3-ubyte')
-labels = load_MNIST_labels.load_MNIST_labels('data/mnist/train-labels-idx1-ubyte')
+images = load_MNIST.load_MNIST_images('data/mnist/train-images-idx3-ubyte')
+labels = load_MNIST.load_MNIST_labels('data/mnist/train-labels-idx1-ubyte')
 
 unlabeled_index = np.argwhere(labels >= 5).flatten()
 labeled_index = np.argwhere(labels < 5).flatten()
@@ -60,7 +59,7 @@ J = lambda x: sparse_autoencoder.sparse_autoencoder_cost(x, input_size, hidden_s
                                                          lambda_, sparsity_param,
                                                          beta, unlabeled_data)
 
-options_ = {'maxiter': 400, 'disp': True}
+options_ = {'maxiter': 100, 'disp': True}
 result = scipy.optimize.minimize(J, theta, method='L-BFGS-B', jac=True, options=options_)
 opt_theta = result.x
 
@@ -86,7 +85,7 @@ test_features = sparse_autoencoder.sparse_autoencoder(opt_theta, hidden_size,
 ## STEP 4: Train the softmax classifier
 
 lambda_ = 1e-4
-options_ = {'maxiter': 400, 'disp': True}
+options_ = {'maxiter': 100, 'disp': True}
 
 opt_theta, input_size, num_classes = softmax.softmax_train(hidden_size, num_labels,
                                                            lambda_, train_features,

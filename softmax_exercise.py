@@ -1,5 +1,4 @@
-import load_MNIST_images
-import load_MNIST_labels
+import load_MNIST
 import numpy as np
 import softmax
 import compute_gradient
@@ -33,8 +32,8 @@ debug = False
 # On some platforms, the files might be saved as
 # train-images.idx3-ubyte / train-labels.idx1-ubyte
 
-images = load_MNIST_images.load_MNIST_images('data/mnist/train-images-idx3-ubyte')
-labels = load_MNIST_labels.load_MNIST_labels('data/mnist/train-labels-idx1-ubyte')
+images = load_MNIST.load_MNIST_images('data/mnist/train-images-idx3-ubyte')
+labels = load_MNIST.load_MNIST_labels('data/mnist/train-labels-idx1-ubyte')
 
 if debug:
     input_size = 8 * 8
@@ -93,7 +92,7 @@ opt_theta, input_size, num_classes = softmax.softmax_train(input_size, num_class
 #  (in softmaxPredict.m), which should return predictions
 #  given a softmax model and the input data.
 
-test_images = load_MNIST_images.load_MNIST_images('data/mnist/t10k-images.idx3-ubyte')
-test_labels = load_MNIST_labels.load_MNIST_labels('data/mnist/t10k-labels.idx1-ubyte')
+test_images = load_MNIST.load_MNIST_images('data/mnist/t10k-images.idx3-ubyte')
+test_labels = load_MNIST_labels('data/mnist/t10k-labels.idx1-ubyte')
 predictions = softmax.softmax_predict((opt_theta, input_size, num_classes), test_images)
 print "Accuracy: {0:.2f}%".format(100 * np.sum(predictions == test_labels, dtype=np.float64) / test_labels.shape[0])

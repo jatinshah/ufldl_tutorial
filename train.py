@@ -6,7 +6,7 @@ import sparse_autoencoder
 import check_gradient
 import compute_gradient
 import display_network
-import load_MNIST_images
+import load_MNIST
 
 
 ##======================================================================
@@ -41,7 +41,7 @@ debug = False
 # patches = sample_images.sample_images()
 
 # Loading 10K images from MNIST database
-images = load_MNIST_images.load_MNIST_images('data/mnist/train-images-idx3-ubyte')
+images = load_MNIST.load_MNIST_images('data/mnist/train-images-idx3-ubyte')
 patches = images[:, 0:10000]
 
 #  Obtain random parameters theta
