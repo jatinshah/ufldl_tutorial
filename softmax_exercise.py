@@ -1,7 +1,7 @@
 import load_MNIST
 import numpy as np
 import softmax
-import compute_gradient
+import gradient
 
 ##======================================================================
 ## STEP 0: Initialise constants and parameters
@@ -63,7 +63,7 @@ theta = 0.005 * np.random.randn(num_classes * input_size)
 if debug:
     J = lambda x: softmax.softmax_cost(x, num_classes, input_size, lambda_, input_data, labels)
 
-    num_grad = compute_gradient.compute_gradient(J, theta)
+    num_grad = gradient.compute_gradient(J, theta)
 
     # Use this to visually compare the gradients side by side
     print num_grad, grad
@@ -93,6 +93,6 @@ opt_theta, input_size, num_classes = softmax.softmax_train(input_size, num_class
 #  given a softmax model and the input data.
 
 test_images = load_MNIST.load_MNIST_images('data/mnist/t10k-images.idx3-ubyte')
-test_labels = load_MNIST_labels('data/mnist/t10k-labels.idx1-ubyte')
+test_labels = load_MNIST.load_MNIST_labels('data/mnist/t10k-labels.idx1-ubyte')
 predictions = softmax.softmax_predict((opt_theta, input_size, num_classes), test_images)
 print "Accuracy: {0:.2f}%".format(100 * np.sum(predictions == test_labels, dtype=np.float64) / test_labels.shape[0])

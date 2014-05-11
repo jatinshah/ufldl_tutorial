@@ -3,8 +3,7 @@ import scipy.optimize
 
 import sample_images
 import sparse_autoencoder
-import check_gradient
-import compute_gradient
+import gradient
 import display_network
 import load_MNIST
 
@@ -91,7 +90,7 @@ print cost, grad
 
 
 if (debug):
-    check_gradient.check_gradient()
+    gradient.check_gradient()
 
     # Now we can use it to check your cost function and derivative calculations
     # for the sparse autoencoder.
@@ -100,7 +99,7 @@ if (debug):
     J = lambda x: sparse_autoencoder.sparse_autoencoder_cost(x, visible_size, hidden_size,
                                                              lambda_, sparsity_param,
                                                              beta, patches)
-    num_grad = compute_gradient.compute_gradient(J, theta)
+    num_grad = gradient.compute_gradient(J, theta)
 
     # Use this to visually compare the gradients side by side
     print num_grad, grad
