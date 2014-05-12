@@ -38,10 +38,10 @@ test_index = labeled_index[num_train:]
 unlabeled_data = images[:, unlabeled_index]
 
 train_data = images[:, train_index]
-train_labels = labels[train_index, :]
+train_labels = labels[train_index]
 
 test_data = images[:, test_index]
-test_labels = labels[test_index, :]
+test_labels = labels[test_index]
 
 print '# examples in unlabeled set: {0:d}\n'.format(unlabeled_data.shape[1])
 print '# examples in supervised training set: {0:d}\n'.format(train_data.shape[1])
