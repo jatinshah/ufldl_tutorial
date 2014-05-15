@@ -59,7 +59,7 @@ J = lambda x: sparse_autoencoder.sparse_autoencoder_cost(x, input_size, hidden_s
                                                          lambda_, sparsity_param,
                                                          beta, unlabeled_data)
 
-options_ = {'maxiter': 100, 'disp': True}
+options_ = {'maxiter': 400, 'disp': True}
 result = scipy.optimize.minimize(J, theta, method='L-BFGS-B', jac=True, options=options_)
 opt_theta = result.x
 
@@ -85,7 +85,7 @@ test_features = sparse_autoencoder.sparse_autoencoder(opt_theta, hidden_size,
 ## STEP 4: Train the softmax classifier
 
 lambda_ = 1e-4
-options_ = {'maxiter': 100, 'disp': True}
+options_ = {'maxiter': 400, 'disp': True}
 
 opt_theta, input_size, num_classes = softmax.softmax_train(hidden_size, num_labels,
                                                            lambda_, train_features,

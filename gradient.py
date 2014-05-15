@@ -1,5 +1,5 @@
 import numpy as np
-
+import stacked_autoencoder
 
 
 # this function accepts a 2D vector as input.
@@ -58,3 +58,54 @@ def check_gradient():
     print "Norm of the difference between numerical and analytical num_grad (should be < 1e-9)\n"
 
 
+def check_stacked_autoencoder():
+    """
+    # Check the gradients for the stacked autoencoder
+    #
+    # In general, we recommend that the creation of such files for checking
+    # gradients when you write new cost functions.
+    #
+
+    :return:
+    """
+    ## Setup random data / small model
+
+    input_size = 32
+    hidden_size_L1 = 16
+    hidden_size_L2 = 12
+    lambda_ = 0.01
+    data = np.random.randn(input_size, 10)
+    labels = np.random.randint(4, size=10)
+    num_classes = 4
+
+    stack = [dict() for i in range(2)]
+    stack[0]['w'] = 0.1 * np.random.randn(hidden_size_L1, input_size)
+    stack[0]['b'] = np.random.randn(hidden_size_L1)
+    stack[1]['w'] = 0.1 * np.random.randn(hidden_size_L2, hidden_size_L1)
+    stack[1]['b'] = np.random.randn(hidden_size_L2)
+    softmax_theta = 0.005 * np.random.randn(hidden_size_L2 * num_classes)
+
+    params, net_config = stacked_autoencoder.stack2params(stack)
+
+    stacked_theta = np.concatenate((softmax_theta, params))
+
+    cost, grad = stacked_autoencoder.stacked_autoencoder_cost(stacked_theta, input_size,
+                                                              hidden_size_L2, num_classes,
+                                                              net_config, lambda_, data, labels)
+
+    # Check that the numerical and analytic gradients are the same
+    J = lambda x: stacked_autoencoder.stacked_autoencoder_cost(x, input_size, hidden_size_L2,
+                                                               num_classes, net_config, lambda_,
+                                                               data, labels)
+    num_grad = compute_gradient(J, stacked_theta)
+
+    print num_grad, grad
+    print "The above two columns you get should be very similar.\n" \
+          "(Left-Your Numerical Gradient, Right-Analytical Gradient)\n"
+
+    diff = np.linalg.norm(num_grad - grad) / np.linalg.norm(num_grad + grad)
+    print diff
+    print "Norm of the difference between numerical and analytical num_grad (should be < 1e-9)\n"
+
+
+check_stacked_autoencoder()
