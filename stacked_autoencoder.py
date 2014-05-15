@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.sparse
+import softmax
 
 
 def sigmoid(x):
@@ -151,3 +152,41 @@ def stacked_autoencoder_cost(theta, input_size, hidden_size, num_classes,
     grad = np.concatenate((softmax_grad.flatten(), grad_params))
 
     return cost, grad
+
+
+def stacked_autoencoder_predict(theta, input_size, hidden_size, num_classes, net_config, data):
+    """
+    Takes a trained theta and a test data set,
+    and returns the predicted labels for each example
+    :param theta: trained weights from the autoencoder
+    :param input_size: the number of input units
+    :param hidden_size: the number of hidden units at the layer before softmax
+    :param num_classes: the number of categories
+    :param netconfig: network configuration of the stack
+    :param data: the matrix containing the training data as columsn. data[:,i-1] is the i-th training example
+    :return:
+
+    Your code should produce the prediction matrix
+    pred, where pred(i) is argmax_c P(y(c) | x(i)).
+    """
+
+    ## Unroll theta parameter
+    # We first extract the part which compute the softmax gradient
+    softmax_theta = theta[0:hidden_size * num_classes].reshape(num_classes, hidden_size)
+
+    # Extract out the "stack"
+    stack = params2stack(theta, net_config)
+
+    # Compute predictions
+    a = [data]
+    z = [np.array(0)]  # Dummy value
+
+    # Sparse Autoencoder Computation
+    for s in stack:
+        z.append(s['w'].dot(a[-1]) + np.tile(s['b'], (m, 1)).transpose())
+        a.append(sigmoid(z[-1]))
+
+    # Softmax
+    pred = softmax.softmax_predict((softmax_theta, hidden_size, num_classes), a[-1])
+
+    return pred

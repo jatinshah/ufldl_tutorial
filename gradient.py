@@ -70,9 +70,9 @@ def check_stacked_autoencoder():
     """
     ## Setup random data / small model
 
-    input_size = 32
-    hidden_size_L1 = 16
-    hidden_size_L2 = 12
+    input_size = 64
+    hidden_size_L1 = 36
+    hidden_size_L2 = 25
     lambda_ = 0.01
     data = np.random.randn(input_size, 10)
     labels = np.random.randint(4, size=10)
