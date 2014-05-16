@@ -177,6 +177,8 @@ def stacked_autoencoder_predict(theta, input_size, hidden_size, num_classes, net
     # Extract out the "stack"
     stack = params2stack(theta, net_config)
 
+    m = data.shape[1]
+
     # Compute predictions
     a = [data]
     z = [np.array(0)]  # Dummy value

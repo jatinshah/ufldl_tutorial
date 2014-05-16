@@ -41,6 +41,7 @@ J = lambda x: sparse_autoencoder.sparse_autoencoder_cost(x, input_size, hidden_s
                                                          lambda_, sparsity_param,
                                                          beta, train_images)
 options_ = {'maxiter': 100, 'disp': True}
+
 result = scipy.optimize.minimize(J, sae1_theta, method='L-BFGS-B', jac=True, options=options_)
 sae1_opt_theta = result.x
 
@@ -64,6 +65,7 @@ J = lambda x: sparse_autoencoder.sparse_autoencoder_cost(x, hidden_size_L1, hidd
                                                          beta, sae1_features)
 
 options_ = {'maxiter': 400, 'disp': True}
+
 result = scipy.optimize.minimize(J, sae2_theta, method='L-BFGS-B', jac=True, options=options_)
 sae2_opt_theta = result.x
 
@@ -80,6 +82,7 @@ sae2_features = sparse_autoencoder.sparse_autoencoder(sae2_opt_theta, hidden_siz
                                                       hidden_size_L1, sae1_features)
 
 options_ = {'maxiter': 400, 'disp': True}
+
 softmax_theta, softmax_input_size, softmax_num_classes = softmax.softmax_train(hidden_size_L2, num_classes,
                                                                                lambda_, sae2_features,
                                                                                train_labels, options_)
@@ -117,7 +120,7 @@ print result
 ## STEP 6: Test
 
 test_images = load_MNIST.load_MNIST_images('data/mnist/t10k-images.idx3-ubyte')
-test_labels = load_MNIST.load_MNIST_labels('data/mnist/t10k-labels.idx1-ubyte ')
+test_labels = load_MNIST.load_MNIST_labels('data/mnist/t10k-labels.idx1-ubyte')
 
 pred = stacked_autoencoder.stacked_autoencoder_predict(stacked_autoencoder_theta, input_size, hidden_size_L2,
                                                        num_classes, net_config, test_images)
