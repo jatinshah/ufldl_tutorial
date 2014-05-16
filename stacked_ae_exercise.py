@@ -54,7 +54,7 @@ print result
 #  to change anything here.
 
 sae1_features = sparse_autoencoder.sparse_autoencoder(sae1_opt_theta, hidden_size_L1,
-                                                      input_size, images)
+                                                      input_size, train_images)
 
 #  Randomly initialize the parameters
 sae2_theta = sparse_autoencoder.initialize(hidden_size_L2, hidden_size_L1)
@@ -105,7 +105,7 @@ stacked_autoencoder_theta = np.concatenate((softmax_theta.flatten(), stack_param
 
 J = lambda x: stacked_autoencoder.stacked_autoencoder_cost(x, input_size, hidden_size_L2,
                                                            num_classes, net_config, lambda_,
-                                                           images, train_labels)
+                                                           train_images, train_labels)
 
 options_ = {'maxiter': 400, 'disp': True}
 result = scipy.optimize.minimize(J, stacked_autoencoder_theta, method='L-BFGS-B', jac=True, options=options_)
