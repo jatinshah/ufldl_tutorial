@@ -116,8 +116,8 @@ print result
 ##======================================================================
 ## STEP 6: Test
 
-test_images = load_MNIST.load_MNIST_images('data/mnist/t10k-images-idx3-ubyte')
-test_labels = load_MNIST.load_MNIST_labels('data/mnist/t10k-labels-idx1-ubyte')
+test_images = load_MNIST.load_MNIST_images('data/mnist/t10k-images.idx3-ubyte')
+test_labels = load_MNIST.load_MNIST_labels('data/mnist/t10k-labels.idx1-ubyte ')
 
 pred = stacked_autoencoder.stacked_autoencoder_predict(stacked_autoencoder_theta, input_size, hidden_size_L2,
                                                        num_classes, net_config, test_images)
