@@ -40,7 +40,7 @@ sae1_theta = sparse_autoencoder.initialize(hidden_size_L1, input_size)
 J = lambda x: sparse_autoencoder.sparse_autoencoder_cost(x, input_size, hidden_size_L1,
                                                          lambda_, sparsity_param,
                                                          beta, train_images)
-options_ = {'maxiter': 100, 'disp': True}
+options_ = {'maxiter': 400, 'disp': True}
 
 result = scipy.optimize.minimize(J, sae1_theta, method='L-BFGS-B', jac=True, options=options_)
 sae1_opt_theta = result.x
@@ -122,12 +122,17 @@ print result
 test_images = load_MNIST.load_MNIST_images('data/mnist/t10k-images.idx3-ubyte')
 test_labels = load_MNIST.load_MNIST_labels('data/mnist/t10k-labels.idx1-ubyte')
 
+# Single auto encoder without fine tuning
+
+
+# Two auto encoders without fine tuning
 pred = stacked_autoencoder.stacked_autoencoder_predict(stacked_autoencoder_theta, input_size, hidden_size_L2,
                                                        num_classes, net_config, test_images)
 
 print "Before fine-tuning accuracy: {0:.2f}%".format(100 * np.sum(pred == test_labels, dtype=np.float64) /
                                                      test_labels.shape[0])
 
+# Two auto encoders with fine tuning
 pred = stacked_autoencoder.stacked_autoencoder_predict(stacked_autoencoder_opt_theta, input_size, hidden_size_L2,
                                                        num_classes, net_config, test_images)
 
