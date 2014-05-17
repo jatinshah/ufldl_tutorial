@@ -122,8 +122,6 @@ print result
 test_images = load_MNIST.load_MNIST_images('data/mnist/t10k-images.idx3-ubyte')
 test_labels = load_MNIST.load_MNIST_labels('data/mnist/t10k-labels.idx1-ubyte')
 
-# Single auto encoder without fine tuning
-
 
 # Two auto encoders without fine tuning
 pred = stacked_autoencoder.stacked_autoencoder_predict(stacked_autoencoder_theta, input_size, hidden_size_L2,
