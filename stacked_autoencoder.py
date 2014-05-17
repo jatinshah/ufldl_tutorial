@@ -175,7 +175,7 @@ def stacked_autoencoder_predict(theta, input_size, hidden_size, num_classes, net
     softmax_theta = theta[0:hidden_size * num_classes].reshape(num_classes, hidden_size)
 
     # Extract out the "stack"
-    stack = params2stack(theta, net_config)
+    stack = params2stack(theta[hidden_size * num_classes:], net_config)
 
     m = data.shape[1]
 
