@@ -14,13 +14,15 @@ import numpy as np
 patches = sample_images.sample_images_raw()
 num_samples = patches.shape[1]
 random_sel = random.sample(range(num_samples), 400)
-display_network.display_network(patches[:, random_sel])
+display_network.display_network(patches[:, random_sel], 'raw_pca.png')
 
 ##================================================================
 ## Step 0b: Zero-mean the data (by row)
 #  You can make use of the mean and repmat/bsxfun functions.
 
-patches = patches - patches.mean(axis=0)
+# patches = patches - patches.mean(axis=0)
+patch_mean = patches.mean(axis=1)
+patches = patches - np.tile(patch_mean, (patches.shape[1], 1)).transpose()
 
 ##================================================================
 ## Step 1a: Implement PCA to obtain xRot
@@ -39,7 +41,7 @@ patches_rot = u.transpose().dot(patches)
 
 k = 0
 for k in range(s.shape[0]):
-    if (s[0:k].sum() / s.sum() >= 0.99):
+    if s[0:k].sum() / s.sum() >= 0.99:
         break
 print 'Optimal k to retain 99% variance is:', k
 
