@@ -84,11 +84,25 @@ def cnn_pool(pool_dim, convolved_features):
     :param pool_dim: dimension of the pooling region
     :param convolved_features: convolved features to pool (as given by cnn_convolve)
                                convolved_features(feature_num, image_num, image_row, image_col)
-    :return:
+    :return: pooled_features: matrix of pooled features in the form
+                              pooledFeatures(featureNum, imageNum, poolRow, poolCol)
     """
 
     num_images = convolved_features.shape[1]
     num_features = convolved_features.shape[0]
     convolved_dim = convolved_features.shape[2]
 
-    return 0
+    if convolved_dim % pool_dim != 0:
+        print "Error: Pooling dimension is not an exact multiple of convolved dimension"
+        return 0
+
+    pool_size = convolved_dim / pool_dim
+    pooled_features = np.zeros(shape=(num_features, num_images, pool_size, pool_size),
+                               dtype=np.float64)
+
+    for i in range(pool_size):
+        for j in range(pool_size):
+            pool = convolved_features[:, :, i * pool_dim:(i + 1) * pool_dim, j * pool_dim:(j + 1) * pool_dim]
+            pooled_features[:, :, i, j] = np.mean(np.mean(pool, 2), 2)
+
+    return pooled_features

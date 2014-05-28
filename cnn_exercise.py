@@ -113,8 +113,24 @@ print 'Congratulations! Your convolution code passed the test.'
 #  Implement pooling in the function cnnPool in cnnPool.m
 
 # NOTE: Implement cnnPool in cnnPool.m first!
-pooledFeatures = cnnPool(poolDim, convolvedFeatures);
+pooled_features = cnn.cnn_pool(pool_dim, convolved_features);
 
 ## STEP 2d: Checking your pooling
 #  To ensure that you have implemented pooling, we will use your pooling
 #  function to pool over a test matrix and check the results.
+test_matrix = np.arange(64).reshape(8, 8)
+expected_matrix = np.array([[np.mean(test_matrix[0:4, 0:4]), np.mean(test_matrix[0:4, 4:8])],
+                            [np.mean(test_matrix[4:8, 0:4]), np.mean(test_matrix[4:8, 4:8])]])
+
+test_matrix = np.reshape(test_matrix, (1, 1, 8, 8))
+
+pooled_features = cnn.cnn_pool(4, test_matrix)
+
+if not (pooled_features == expected_matrix).all():
+    print "Pooling incorrect"
+    print "Expected matrix"
+    print expected_matrix
+    print "Got"
+    print pooled_features
+
+print 'Congratulations! Your pooling code passed the test.'
