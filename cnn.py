@@ -92,9 +92,7 @@ def cnn_pool(pool_dim, convolved_features):
     num_features = convolved_features.shape[0]
     convolved_dim = convolved_features.shape[2]
 
-    if convolved_dim % pool_dim != 0:
-        print "Error: Pooling dimension is not an exact multiple of convolved dimension"
-        return 0
+    assert convolved_dim % pool_dim == 0, "Pooling dimension is not an exact multiple of convolved dimension"
 
     pool_size = convolved_dim / pool_dim
     pooled_features = np.zeros(shape=(num_features, num_images, pool_size, pool_size),

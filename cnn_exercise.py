@@ -113,7 +113,6 @@ print 'Congratulations! Your convolution code passed the test.'
 #  Implement pooling in the function cnnPool in cnnPool.m
 
 # NOTE: Implement cnnPool in cnnPool.m first!
-pooled_features = cnn.cnn_pool(pool_dim, convolved_features);
 
 ## STEP 2d: Checking your pooling
 #  To ensure that you have implemented pooling, we will use your pooling
@@ -134,3 +133,16 @@ if not (pooled_features == expected_matrix).all():
     print pooled_features
 
 print 'Congratulations! Your pooling code passed the test.'
+
+##======================================================================
+## STEP 3: Convolve and pool with the dataset
+#  In this step, you will convolve each of the features you learned with
+#  the full large images to obtain the convolved features. You will then
+#  pool the convolved features to obtain the pooled features for
+#  classification.
+#
+#  Because the convolved features matrix is very large, we will do the
+#  convolution and pooling 50 features at a time to avoid running out of
+#  memory. Reduce this number if necessary
+step_size = 50
+assert hidden_size % step_size == 0, "step_size should divide hidden_size"
