@@ -116,7 +116,7 @@ print result
 # Save the learned features and the preprocessing matrices for use in
 # the later exercise on convolution and pooling
 print('Saving learned features and preprocessing matrices...')
-with open('stl10_features.pickle') as f:
+with open('stl10_features.pickle', 'wb') as f:
     cPickle.dump(opt_theta, f)
     cPickle.dump(zca_white, f)
     cPickle.dump(patch_mean, f)
