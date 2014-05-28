@@ -90,7 +90,6 @@ for i in range(1000):
 
     patch = conv_images[image_row:image_row + patch_dim, image_col:image_col + patch_dim, :, image_num]
 
-    ### REVIEW & FINALIZE - make it work with multiple channels
     patch = np.concatenate((patch[:, :, 0].flatten(), patch[:, :, 1].flatten(), patch[:, :, 2].flatten()))
     patch = np.reshape(patch, (patch.size, 1))
     patch = patch - np.tile(patch_mean, (patch.shape[1], 1)).transpose()
@@ -109,3 +108,13 @@ for i in range(1000):
         sys.exit("Convolved feature does not match activation from autoencoder. Exiting...")
 
 print 'Congratulations! Your convolution code passed the test.'
+
+## STEP 2c: Implement pooling
+#  Implement pooling in the function cnnPool in cnnPool.m
+
+# NOTE: Implement cnnPool in cnnPool.m first!
+pooledFeatures = cnnPool(poolDim, convolvedFeatures);
+
+## STEP 2d: Checking your pooling
+#  To ensure that you have implemented pooling, we will use your pooling
+#  function to pool over a test matrix and check the results.

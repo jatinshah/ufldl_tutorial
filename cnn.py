@@ -87,4 +87,8 @@ def cnn_pool(pool_dim, convolved_features):
     :return:
     """
 
+    num_images = convolved_features.shape[1]
+    num_features = convolved_features.shape[0]
+    convolved_dim = convolved_features.shape[2]
+
     return 0
