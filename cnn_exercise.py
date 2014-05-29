@@ -5,6 +5,8 @@ import scipy.io
 import cnn
 import sparse_autoencoder
 import sys
+import time, datetime
+import softmax
 
 ## CS294A/CS294W Convolutional Neural Networks Exercise
 
@@ -144,5 +146,92 @@ print 'Congratulations! Your pooling code passed the test.'
 #  Because the convolved features matrix is very large, we will do the
 #  convolution and pooling 50 features at a time to avoid running out of
 #  memory. Reduce this number if necessary
-step_size = 50
+step_size = 10
 assert hidden_size % step_size == 0, "step_size should divide hidden_size"
+
+stl_train = scipy.io.loadmat('data/stlTrainSubset.mat')
+train_images = stl_train['trainImages']
+train_labels = stl_train['trainLabels']
+num_train_images = stl_train['numTrainImages'][0][0]
+
+stl_test = scipy.io.loadmat('data/stlTestSubset.mat')
+test_images = stl_test['testImages']
+test_labels = stl_test['testLabels']
+num_test_images = stl_test['numTestImages'][0][0]
+
+pooled_features_train = np.zeros(shape=(hidden_size, num_train_images,
+                                        np.floor((image_dim - patch_dim + 1) / pool_dim),
+                                        np.floor((image_dim - patch_dim + 1) / pool_dim)),
+                                 dtype=np.float64)
+pooled_features_test = np.zeros(shape=(hidden_size, num_test_images,
+                                       np.floor((image_dim - patch_dim + 1) / pool_dim),
+                                       np.floor((image_dim - patch_dim + 1) / pool_dim)),
+                                dtype=np.float64)
+
+start_time = time.time()
+for conv_part in range(hidden_size / step_size):
+    features_start = conv_part * step_size
+    features_end = (conv_part + 1) * step_size
+    print "Step:", conv_part, "features", features_start, "to", features_end
+
+    Wt = W[features_start:features_end, :]
+    bt = b[features_start:features_end]
+
+    print "Convolving & pooling train images"
+    convolved_features = cnn.cnn_convolve(patch_dim, step_size, train_images,
+                                          Wt, bt, zca_white, patch_mean)
+    pooled_features = cnn.cnn_pool(pool_dim, convolved_features)
+    pooled_features_train[features_start:features_end, :, :, :] = pooled_features
+
+    print "Time elapsed:", str(datetime.timedelta(seconds=time.time() - start_time))
+
+    print "Convolving and pooling test images"
+    convolved_features = cnn.cnn_convolve(patch_dim, step_size, test_images,
+                                          Wt, bt, zca_white, patch_mean)
+    pooled_features = cnn.cnn_pool(pool_dim, convolved_features)
+    pooled_features_test[features_start:features_end, :, :, :] = pooled_features
+
+    print "Time elapsed:", str(datetime.timedelta(seconds=time.time() - start_time))
+
+print('Saving pooled features...')
+with open('cnn_pooled_features.pickle', 'wb') as f:
+    pickle.dump(pooled_features_train, f)
+    pickle.dump(pooled_features_test, f)
+
+print "Saved"
+print "Time elapsed:", str(datetime.timedelta(seconds=time.time() - start_time))
+
+##======================================================================
+## STEP 4: Use pooled features for classification
+#  Now, you will use your pooled features to train a softmax classifier,
+#  using softmaxTrain from the softmax exercise.
+#  Training the softmax classifer for 1000 iterations should take less than
+#  10 minutes.
+
+# Setup parameters for softmax
+softmax_lambda = 1e-4
+num_classes = 4
+
+# Reshape the pooled_features to form an input vector for softmax
+softmax_images = np.transpose(pooled_features_train, axes=[0, 2, 3, 1])
+softmax_images = softmax_images.reshape(shape=(softmax_images.size / num_train_images, num_train_images))
+softmax_labels = train_labels
+
+options_ = {'maxiter': 1000, 'disp': True}
+softmax_model = softmax.softmax_train(softmax_images.size / num_train_images, num_classes,
+                                      softmax_lambda, softmax_images, softmax_labels, options_)
+
+(softmax_opt_theta, softmax_input_size, softmax_num_classes) = softmax_model
+
+
+##======================================================================
+## STEP 5: Test classifer
+#  Now you will test your trained classifer against the test images
+softmax_images = np.transpose(pooled_features_test, axes=[0, 2, 3, 1])
+softmax_images = softmax_images.reshape(shape=(softmax_images.size / num_test_images, num_test_images))
+softmax_labels = test_labels
+
+predictions = softmax.softmax_predict(softmax_model, softmax_images)
+print "Accuracy: {0:.2f}%".format(100 * np.sum(predictions == softmax_labels, dtype=np.float64) / test_labels.shape[0])
+
+# You should expect to get an accuracy of around 80% on the test images.
