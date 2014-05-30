@@ -146,7 +146,7 @@ print 'Congratulations! Your pooling code passed the test.'
 #  Because the convolved features matrix is very large, we will do the
 #  convolution and pooling 50 features at a time to avoid running out of
 #  memory. Reduce this number if necessary
-step_size = 10
+step_size = 25
 assert hidden_size % step_size == 0, "step_size should divide hidden_size"
 
 stl_train = scipy.io.loadmat('data/stlTrainSubset.mat')
