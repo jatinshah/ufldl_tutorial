@@ -208,14 +208,19 @@ print "Time elapsed:", str(datetime.timedelta(seconds=time.time() - start_time))
 #  Training the softmax classifer for 1000 iterations should take less than
 #  10 minutes.
 
+# Load pooled features
+with open('cnn_pooled_features.pickle', 'r') as f:
+    pooled_features_train = pickle.load(f)
+    pooled_features_test = pickle.load(f)
+
 # Setup parameters for softmax
 softmax_lambda = 1e-4
 num_classes = 4
 
 # Reshape the pooled_features to form an input vector for softmax
 softmax_images = np.transpose(pooled_features_train, axes=[0, 2, 3, 1])
-softmax_images = softmax_images.reshape(shape=(softmax_images.size / num_train_images, num_train_images))
-softmax_labels = train_labels
+softmax_images = softmax_images.reshape((softmax_images.size / num_train_images, num_train_images))
+softmax_labels = train_labels.flatten() - 1  # Ensure that labels are from 0..n-1 (for n classes)
 
 options_ = {'maxiter': 1000, 'disp': True}
 softmax_model = softmax.softmax_train(softmax_images.size / num_train_images, num_classes,
@@ -228,8 +233,8 @@ softmax_model = softmax.softmax_train(softmax_images.size / num_train_images, nu
 ## STEP 5: Test classifer
 #  Now you will test your trained classifer against the test images
 softmax_images = np.transpose(pooled_features_test, axes=[0, 2, 3, 1])
-softmax_images = softmax_images.reshape(shape=(softmax_images.size / num_test_images, num_test_images))
-softmax_labels = test_labels
+softmax_images = softmax_images.reshape((softmax_images.size / num_test_images, num_test_images))
+softmax_labels = test_labels.flatten() - 1
 
 predictions = softmax.softmax_predict(softmax_model, softmax_images)
 print "Accuracy: {0:.2f}%".format(100 * np.sum(predictions == softmax_labels, dtype=np.float64) / test_labels.shape[0])

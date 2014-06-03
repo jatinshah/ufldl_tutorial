@@ -14,7 +14,6 @@ def softmax_cost(theta, num_classes, input_size, lambda_, data, labels):
                  a single test set
     :param labels: an M x 1 matrix containing the labels for the input data
     """
-
     m = data.shape[1]
     theta = theta.reshape(num_classes, input_size)
     theta_data = theta.dot(data)
@@ -66,6 +65,7 @@ def softmax_train(input_size, num_classes, lambda_, data, labels, options={'maxi
     # Initialize theta randomly
     theta = 0.005 * np.random.randn(num_classes * input_size)
 
+    print data.shape, labels.shape
     J = lambda x: softmax_cost(x, num_classes, input_size, lambda_, data, labels)
 
     result = scipy.optimize.minimize(J, theta, method='L-BFGS-B', jac=True, options=options)
