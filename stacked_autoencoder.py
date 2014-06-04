@@ -130,9 +130,7 @@ def stacked_autoencoder_cost(theta, input_size, hidden_size, num_classes,
     cost = (-1 / float(m)) * np.sum(indicator * np.log(prob)) + (lambda_ / 2) * np.sum(softmax_theta * softmax_theta)
     softmax_grad = (-1 / float(m)) * (indicator - prob).dot(a[-1].transpose()) + lambda_ * softmax_theta
 
-
     # Backprop
-
     # Compute partial of cost (J) w.r.t to outputs of last layer (before softmax)
     softmax_grad_a = softmax_theta.transpose().dot(indicator - prob)
 

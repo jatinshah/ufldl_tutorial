@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import PIL
 
+
 # This function visualizes filters in matrix A. Each column of A is a
 # filter. We will reshape each column into a square image and visualizes
 # on each cell of the visualization panel.
@@ -30,7 +31,7 @@ def display_network(A, filename='weights.png'):
     image = np.ones(shape=(buf + m * (sz + buf), buf + n * (sz + buf)))
 
     if not opt_graycolor:
-        image = 0.1 * image
+        image *= 0.1
 
     k = 0
     for i in range(int(m)):
@@ -46,7 +47,7 @@ def display_network(A, filename='weights.png'):
             else:
                 image[buf + i * (sz + buf):buf + i * (sz + buf) + sz, buf + j * (sz + buf):buf + j * (sz + buf) + sz] = \
                     A[:, k].reshape(sz, sz) / np.max(np.abs(A))
-            k = k + 1
+            k += 1
 
     plt.imsave(filename, image, cmap=matplotlib.cm.gray)
 
@@ -63,7 +64,7 @@ def display_color_network(A, filename='weights.png'):
     :param file:
     :return:
     """
-    if (np.min(A) >= 0):
+    if np.min(A) >= 0:
         A = A - np.mean(A)
 
     cols = np.round(np.sqrt(A.shape[1]))

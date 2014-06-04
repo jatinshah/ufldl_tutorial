@@ -1,6 +1,5 @@
 import numpy as np
 import scipy.optimize
-
 import sample_images
 import sparse_autoencoder
 import gradient
@@ -89,7 +88,7 @@ print cost, grad
 # run the following:
 
 
-if (debug):
+if debug:
     gradient.check_gradient()
 
     # Now we can use it to check your cost function and derivative calculations

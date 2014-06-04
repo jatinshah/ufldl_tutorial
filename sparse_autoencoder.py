@@ -66,13 +66,10 @@ def sparse_autoencoder_cost(theta, visible_size, hidden_size,
     rho_hat = np.sum(a2, axis=1) / m
     rho = np.tile(sparsity_param, hidden_size)
 
-
     # Cost function
     cost = np.sum((h - data) ** 2) / (2 * m) + \
            (lambda_ / 2) * (np.sum(W1 ** 2) + np.sum(W2 ** 2)) + \
            beta * np.sum(KL_divergence(rho, rho_hat))
-
-
 
     # Backprop
     sparsity_delta = np.tile(- rho / rho_hat + (1 - rho) / (1 - rho_hat), (m, 1)).transpose()
@@ -92,7 +89,7 @@ def sparse_autoencoder_cost(theta, visible_size, hidden_size,
                            b1grad.reshape(hidden_size),
                            b2grad.reshape(visible_size)))
 
-    return (cost, grad)
+    return cost, grad
 
 
 def sparse_autoencoder(theta, hidden_size, visible_size, data):
@@ -180,5 +177,5 @@ def sparse_autoencoder_linear_cost(theta, visible_size, hidden_size,
                            b1grad.reshape(hidden_size),
                            b2grad.reshape(visible_size)))
 
-    return (cost, grad)
+    return cost, grad
 

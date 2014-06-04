@@ -13,7 +13,7 @@ import gradient
 # Size of input vector (MNIST images are 28x28)
 input_size = 28 * 28
 # Number of classes (MNIST images fall into 10 classes)
-num_classes = 10;
+num_classes = 10
 # Weight decay parameter
 lambda_ = 1e-4
 # Debug

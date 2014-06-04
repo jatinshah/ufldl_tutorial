@@ -5,7 +5,8 @@ import scipy.io
 import cnn
 import sparse_autoencoder
 import sys
-import time, datetime
+import time
+import datetime
 import softmax
 
 ## CS294A/CS294W Convolutional Neural Networks Exercise
